@@ -9,8 +9,7 @@ class TransactionController extends Controller
 {
     public function index()
     {
-
-        $transactions = Transaction::where('status', '!=', 'canceled')->get();
+        $transactions = Transaction::all();
 
         return view('transaction.index', compact('transactions'));
     }
@@ -55,9 +54,39 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::findOrFail($id);
 
-        $transaction->status = 'canceled';
+        // Set status_transaksi to 9 before soft deleting
+        $transaction->status_transaksi = 9;
         $transaction->save();
+        
+        $transaction->delete(); // This will soft delete the record
 
         return redirect()->route('DaftarTransaksi');
+    }
+
+    // Show only soft deleted records
+    public function trashed()
+    {
+        $transactions = Transaction::onlyTrashed()->get();
+        return view('transaction.trashed', compact('transactions'));
+    }
+
+    // Restore soft deleted record
+    public function restore($id)
+    {
+        $transaction = Transaction::onlyTrashed()->findOrFail($id);
+        $transaction->status_transaksi = 1; // Reset status_transaksi to active
+        $transaction->save();
+        $transaction->restore();
+        
+        return redirect()->route('DaftarTransaksi');
+    }
+
+    // Permanently delete record
+    public function forceDelete($id)
+    {
+        $transaction = Transaction::onlyTrashed()->findOrFail($id);
+        $transaction->forceDelete();
+        
+        return redirect()->route('transactions.trashed');
     }
 }

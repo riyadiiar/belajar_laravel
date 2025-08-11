@@ -17,7 +17,7 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>No</th>
 					<th>Nama</th>
 					<th>Jumlah</th>
 					<th>Tempat</th>
@@ -27,31 +27,33 @@
 					<th>Action</th>
 				</tr>
 			</thead>
-			<tbody>
-				@forelse($transactions as $transaction)
-				<tr>
-					<td>{{ $transaction->id }}</td>
-					<td>{{ $transaction->name }}</td>
-					<td>{{ $transaction->amount }}</td>
-					<td>{{ $transaction->tempat }}</td>
-					<td>{{ $transaction->transaction_id }}</td>
-					<td>{{ $transaction->created_at }}</td>
-					<td>{{ $transaction->status }}</td>
-					<td>
-						<a href="{{ route('EditTransaksi', $transaction->id) }}" class="btn btn-primary btn-sm">Edit</a>
-						<form action="{{ route('HapusTransaksi', $transaction->id) }}" method="POST" style="display: inline;">
-							@csrf
-							@method('DELETE')
-							<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?')">Delete</button>
-						</form>
-					</td>
-				</tr>
-				@empty
-				<tr>
-					<td colspan="6" class="text-center">Tidak ada transaksi.</td>
-				</tr>
-				@endforelse
-			</tbody>
+			 <tbody>
+                @if(count($transactions) > 0)
+                    @foreach($transactions as $index => $transaction)
+                    <tr>
+                        <td>{{ $index +1 }}</td>
+                        <td>{{ $transaction->name }}</td> 
+                        <td>{{ $transaction->amount }}</td>
+                        <td>{{ $transaction->tempat }}</td>
+                        <td>{{ $transaction->transaction_id }}</td>
+                        <td>{{ $transaction->created_at }}</td>
+                        <td>{{ $transaction->status }}</td>
+                        <td>
+                            <a href="{{ route('EditTransaksi', $transaction->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                            <form action="{{ route('HapusTransaksi', $transaction->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="8" class="text-center">Tidak ada transaksi.</td>
+                    </tr>
+                @endif
+            </tbody>
 		</table>
 	</div>
 </body>
