@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: riyadi
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  redis:
+    image: redis:7.2
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  mysql_data:
+
+# This command will start the MySQL and Redis services in detached mode.
+# docker compose up -d 
+# To stop the service, use: docker compose down
+# docker ps
+# This command will list the running containers.
+# To access the MySQL container, use: docker exec -it mysql_custom bash
+# You can then use the MySQL client to connect to the database:
+# mysql -u myuser -p mydb
+# Enter the password when prompted.
+# To remove the volume and all data, use: docker volume rm mysql_data
+# Note: Ensure Docker is installed and running before executing these commands.
+
+#How to test redis
+# You can test the Redis connection by using the Redis CLI.
+# First, access the Redis container:
+# docker exec -it redis_container redis-cli
+# SET mykey "Hello Redis"
+# GET mykey
+# You can also test Redis by pinging it:
+# docker exec -it redis_container redis-cli ping
